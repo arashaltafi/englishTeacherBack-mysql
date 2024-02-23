@@ -1,0 +1,52 @@
+const mysql = require('../configs/db.config');
+
+const searchDictionary = async (req, res, next) => {
+    try {
+        const { search, page_number, page_size } = req.query;
+
+        const pageOffset = parseInt(page_number - 1) * parseInt(page_size) || 1;
+        const pageLimit = parseInt(page_size) || 1000;
+
+        const [searchItems] = await mysql.query(`SELECT * FROM dictionary WHERE word LIKE '%${search}%' LIMIT ${pageLimit} OFFSET ${pageOffset}`);
+
+        if (searchItems.length > 0) {
+            const resultSearchData = {
+                total: searchItems.length,
+                records: searchItems.map((searchItem) => {
+                    return {
+                        id: searchItem.id,
+                        word: searchItem.word,
+                        mean: searchItem.mean,
+                    }
+                })
+            }
+
+            res.status(200).send({
+                state: 'ok',
+                message: 'عملیات موفق',
+                data: resultSearchData
+                
+            });
+        } else {
+            const resultSearchData = {
+                total: 0,
+                records: []
+            }
+
+            res.status(200).send({
+                state: 'ok',
+                message: 'جستجوی شما نتیجه ای در بر نداشت',
+                data: resultSearchData
+            });
+        }
+    } catch (error) {
+        return res.status(500).send({
+            state: 'err',
+            message: 'خطا در انجام عملیات',
+        });
+    }
+}
+
+module.exports = {
+    searchDictionary
+};
