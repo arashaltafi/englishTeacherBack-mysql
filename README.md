@@ -1,6 +1,6 @@
 # Backend English Teacher Application
 
-## NodeJS, ## ExpressJS ## Mysql
+## NodeJS, ExpressJS, Mysql
 
 <br />
 <br />
@@ -10,6 +10,8 @@ Api With ExpressJs and MySql
 
 <br />
 <br />
+
+## To Run Project :
 
 ### `npm i`
 
