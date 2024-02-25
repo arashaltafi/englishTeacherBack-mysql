@@ -7,6 +7,13 @@ const searchDictionary = async (req, res, next) => {
         const pageOffset = parseInt(page_number - 1) * parseInt(page_size) || 1;
         const pageLimit = parseInt(page_size) || 1000;
 
+        if (pageOffset < 1 || pageLimit <= 0) {
+            return res.status(400).send({
+                state: 'err',
+                message: 'لطفا مقادیر page_number و page_size را به صورت صحیح وارد نمایید',
+            });
+        }
+
         const [searchItems] = await mysql.query(`SELECT * FROM dictionary WHERE word LIKE '%${search}%' LIMIT ${pageLimit} OFFSET ${pageOffset}`);
 
         if (searchItems.length > 0) {
